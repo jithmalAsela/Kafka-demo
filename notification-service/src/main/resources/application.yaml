@@ -1,0 +1,29 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: notification-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.lk.notification.dto.OrderEvent
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      max-poll-records: 10
+    listener:
+      missing-topics-fatal: false
+      ack-mode: manual
+      concurrency: 3
+    # Add retry configuration
+    admin:
+      auto-create: false
+    properties:
+      security.protocol: PLAINTEXT
+      max.request.size: 10485760
